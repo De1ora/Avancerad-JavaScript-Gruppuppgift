@@ -9,6 +9,7 @@ function Nav({ users }) {
           {user}
         </Link>
       ))}
+      <Link to="/support">Support</Link>
     </nav>
   );
 }

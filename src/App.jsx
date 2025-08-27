@@ -5,9 +5,11 @@ import HomePage from "./components/HomePage";
 import UserPage from "./components/UserPage";
 import BlogPostForm from "./components/BlogPostForm";
 import WelcomeScreen from "./components/WelcomeScreen";
+import SupportPage from "./components/SupportPage";
 
 function App() {
   const [activeUser, setActiveUser] = useState(() => {
+    {/* undefined används för komponen med uppmaning om att logga in vid första användning, samt för att logga ut anv. */}
     return localStorage.getItem("activeUser") || undefined;
   });
 
@@ -53,6 +55,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage posts={posts} users={users} />} />
             <Route path="/user/:username" element={<UserPage posts={posts} />} />
+            {/* /new för nytt inlägg, om ingen inloggad användare kommer man till HomePage */}
             <Route
               path="/new"
               element={
@@ -66,6 +69,7 @@ function App() {
                 )
               }
             />
+            <Route path="/support" element={<SupportPage />} />
           </Routes>
         </>
       )}

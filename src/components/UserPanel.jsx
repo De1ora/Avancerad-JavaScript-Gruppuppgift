@@ -14,19 +14,19 @@ function UserPanel({ activeUser, setActiveUser, users }) {
 
   return (
     <header>
-      <h2>Bloggen</h2>
+      <h2>Superviktiga bloggen</h2>
 
       <Nav users={users} />
 
       <select value={activeUser || ""} onChange={(e) => setActiveUser(e.target.value)}>
-        <option value="">Välj användare</option>
+        <option value="" disabled>Välj användare</option>
         {users.map((user, i) => (
           <option key={i} value={user}>{user}</option>
         ))}
       </select>
 
       <button onClick={handleNewPost}>Skriv inlägg</button>
-      <button onClick={() => setActiveUser(undefined)}>Logga ut</button>
+      <button onClick={() => setActiveUser(undefined)}>Logga ut användare</button>
     </header>
   );
 }
