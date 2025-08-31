@@ -1,21 +1,22 @@
 import { useState } from "react";
+import { Box, Heading, Select, TextInput, Button, Text } from "grommet";
 
 function WelcomeScreen({ users, setActiveUser, setUsers }) {
   const [newUser, setNewUser] = useState("");
   const [error, setError] = useState("");
 
-  const handleSelect = (e) => {
-    setActiveUser(e.target.value);
+  const handleSelect = ({ option }) => {
+    setActiveUser(option);
     setError("");
   };
 
-  const handleAddUser = () => {
+ const handleAddUser = () => {
     const trimmedNewUser = newUser.trim();
 
     if (!trimmedNewUser) return;
 
     if (users.includes(trimmedNewUser)) {
-      setError("Användarnamnet är upptaget - försök med ett annat!");
+      setError("Användarnamnet är upptaget – försök med ett annat!");
     } else {
       setUsers((prev) => [...prev, trimmedNewUser]);
       setActiveUser(trimmedNewUser);
@@ -23,28 +24,43 @@ function WelcomeScreen({ users, setActiveUser, setUsers }) {
       setError("");
     }
   };
+
   {/* Variabel om felmeddelande, annars tom*/}
-  const errorMessage = error ? <p className="error-message">{error}</p> : null;
+ const errorMessage = error ? (
+    <Text color="status-critical" margin={{ top: "small" }}>
+      {error}
+    </Text>
+  ) : null;
 
   return (
-    <div>
-      <h2>Vem är du?</h2>
-      <select defaultValue="" onChange={handleSelect}>
-        <option value="" disabled>
-          Välj användare
-        </option>
-        {users.map((user, i) => (
-          <option key={i} value={user}>
-            {user}
-          </option>
-        ))}
-      </select>
+    <Box fill align="center" justify="center" pad="large" gap="medium"  style={{ maxWidth: 400, margin: "auto" }}>
+      <Heading level={2} margin="none">Vem är du?</Heading>
 
-      <p>Eller skriv ett nytt namn:</p>
-      <input value={newUser} onChange={(e) => setNewUser(e.target.value)} />
-      <button onClick={handleAddUser}>Fortsätt</button>
-      {errorMessage}
-    </div>
+      <Box width="100%">
+        <Select
+          options={users}
+          placeholder="Välj användare"
+          onChange={handleSelect}
+        />
+      </Box>
+
+      <Box width="100%">
+        <Text margin={{ vertical: "small" }}>Eller skriv ett nytt namn:</Text>
+        <TextInput
+          placeholder="Nytt användarnamn"
+          value={newUser}
+          onChange={(e) => setNewUser(e.target.value)}
+        />
+        <Button
+          label="Fortsätt"
+          onClick={handleAddUser}
+          primary
+          margin={{ top: "medium" }}
+          fill={false}
+        />
+        {errorMessage}
+      </Box>
+    </Box>
   );
 }
 

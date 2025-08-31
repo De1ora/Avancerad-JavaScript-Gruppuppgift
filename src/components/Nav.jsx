@@ -1,16 +1,21 @@
 import { Link } from "react-router-dom";
+import { Box, Anchor } from "grommet";
 
 function Nav({ users }) {
-  return (
-    <nav>
-      <Link to="/">Hem</Link>
+return (
+    <Box
+      as="nav"
+      direction="row"
+      gap="medium"
+      pad={{ vertical: "small" }}
+      wrap={true} // så länkarna kan brytas på mindre skärm
+    >
+      <Anchor as={Link} to="/" label="Hem" />
       {users.map((user, i) => (
-        <Link key={i} to={`/user/${user}`}>
-          {user}
-        </Link>
+        <Anchor key={i} as={Link} to={`/user/${user}`} label={user} />
       ))}
-      <Link to="/support">Support</Link>
-    </nav>
+      <Anchor as={Link} to="/support" label="Support" />
+    </Box>
   );
 }
 

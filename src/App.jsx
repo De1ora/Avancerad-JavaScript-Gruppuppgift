@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
+import { Grommet } from "grommet";
+import { customLightTheme, customDarkTheme } from "./components/theme";
+
 import UserPanel from "./components/UserPanel";
 import HomePage from "./components/HomePage";
 import UserPage from "./components/UserPage";
 import BlogPostForm from "./components/BlogPostForm";
 import WelcomeScreen from "./components/WelcomeScreen";
 import SupportPage from "./components/SupportPage";
+
 
 function App() {
   const [activeUser, setActiveUser] = useState(() => {
@@ -23,6 +28,11 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [themeMode, setThemeMode] = useState(() => {
+    return localStorage.getItem("themeMode") || "light";
+  });
+
+
   useEffect(() => {
     if (activeUser) {
       localStorage.setItem("activeUser", activeUser);
@@ -37,8 +47,16 @@ function App() {
     localStorage.setItem("posts", JSON.stringify(posts));
   }, [posts]);
 
-  return (
-    <>
+  useEffect(() => {
+    localStorage.setItem("themeMode", themeMode);
+  }, [themeMode]);
+
+  const toggleTheme = () => {
+    setThemeMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+ return (
+   <Grommet theme={themeMode === "light" ? customLightTheme : customDarkTheme} full>
       {!activeUser ? (
         <WelcomeScreen
           users={users}
@@ -51,19 +69,17 @@ function App() {
             activeUser={activeUser}
             setActiveUser={setActiveUser}
             users={users}
+            toggleTheme={toggleTheme}
+            themeMode={themeMode}
           />
           <Routes>
             <Route path="/" element={<HomePage posts={posts} users={users} />} />
             <Route path="/user/:username" element={<UserPage posts={posts} />} />
-            {/* /new för nytt inlägg, om ingen inloggad användare kommer man till HomePage */}
             <Route
               path="/new"
               element={
                 activeUser ? (
-                  <BlogPostForm
-                    activeUser={activeUser}
-                    setPosts={setPosts}
-                  />
+                  <BlogPostForm activeUser={activeUser} setPosts={setPosts} />
                 ) : (
                   <Navigate to="/" />
                 )
@@ -73,7 +89,7 @@ function App() {
           </Routes>
         </>
       )}
-    </>
+    </Grommet>
   );
 }
 
