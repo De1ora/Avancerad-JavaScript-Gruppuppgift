@@ -11,7 +11,6 @@ function WelcomeScreen({ users, setActiveUser, setUsers }) {
 
   const handleAddUser = () => {
     const trimmedNewUser = newUser.trim();
-
     if (!trimmedNewUser) return;
 
     if (users.includes(trimmedNewUser)) {
@@ -23,13 +22,16 @@ function WelcomeScreen({ users, setActiveUser, setUsers }) {
       setError("");
     }
   };
-  {/* Variabel om felmeddelande, annars tom*/}
-  const errorMessage = error ? <p className="error-message">{error}</p> : null;
 
   return (
-    <div>
-      <h2>Vem är du?</h2>
-      <select defaultValue="" onChange={handleSelect}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center gap-4">
+      <h2 className="text-4xl font-semibold">Vem är du?</h2>
+
+      <select
+        defaultValue=""
+        onChange={handleSelect}
+        className="border rounded px-4 py-2"
+      >
         <option value="" disabled>
           Välj användare
         </option>
@@ -40,10 +42,20 @@ function WelcomeScreen({ users, setActiveUser, setUsers }) {
         ))}
       </select>
 
-      <p>Eller skriv ett nytt namn:</p>
-      <input value={newUser} onChange={(e) => setNewUser(e.target.value)} />
-      <button onClick={handleAddUser}>Fortsätt</button>
-      {errorMessage}
+      <p className="text-sm text-gray-600">Eller skriv ett nytt namn:</p>
+      <input
+        className="border rounded px-4 py-2"
+        value={newUser}
+        onChange={(e) => setNewUser(e.target.value)}
+      />
+      <button
+        onClick={handleAddUser}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Fortsätt
+      </button>
+
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 }

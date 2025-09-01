@@ -24,15 +24,22 @@ function BlogPostForm({ activeUser, setPosts }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Skriv som {activeUser}</h2>
+    <form onSubmit={handleSubmit} className="p-6 space-y-4 max-w-xl mx-auto">
+      <h2 className="text-xl font-bold">Skriv som {activeUser}</h2>
       <textarea
+        className="w-full border rounded p-3"
+        rows={6}
         value={text}
         onChange={(e) => setText(e.target.value)}
         required
+        placeholder="Vad vill du säga?"
       />
-      <br />
-      <button type="submit">Publicera</button>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Publicera
+      </button>
     </form>
   );
 }
