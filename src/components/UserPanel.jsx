@@ -13,7 +13,7 @@ function UserPanel({ activeUser, setActiveUser, users }) {
   };
 
   return (
-    <div className="px-4"> {/* Lägg till denna wrapper med sidomarginal */}
+    <div className="px-4">
       <header className="bg-white shadow p-4 flex flex-wrap items-center justify-between gap-4">
         <h1 
           className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" 

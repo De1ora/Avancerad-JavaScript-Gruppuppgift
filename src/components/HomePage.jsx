@@ -8,7 +8,7 @@ function HomePage({ posts, users }) {
 
    return (
     <div className="p-6 space-y-6">
-      <h2 className="text-2xl font-bold">Senaste inlägg från varje användare</h2>
+      <h2 className="text-2xl font-bold">Senaste inläggen från varje användare</h2>
       {latestPosts.length > 0 ? (
         latestPosts.map((post) => (
           <div key={post.id} className="bg-white shadow p-4 rounded">

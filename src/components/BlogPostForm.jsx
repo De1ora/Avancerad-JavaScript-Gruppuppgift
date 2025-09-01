@@ -32,7 +32,7 @@ function BlogPostForm({ activeUser, setPosts }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
         required
-        placeholder="Vad vill du säga?"
+        placeholder="Vad vill du berätta idag?"
       />
       <button
         type="submit"
