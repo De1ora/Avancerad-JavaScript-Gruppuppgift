@@ -77,10 +77,18 @@ function BlogPost() {
 
           <CardHeader>
             <CardTitle>{blog.title}</CardTitle>
-            <CardDescription>{blog.image}</CardDescription>
           </CardHeader>
-
-          <CardContent>
+          
+          {/* Test with p to the right */}
+          <CardContent className="flex items-start gap-x-4">
+             {blog.image && (
+              <img
+                src={blog.image}
+                alt={blog.title}
+                onError={(e) => (e.currentTarget.src = "/no-image.png")}
+                className="w-24 h-auto rounded shadow-md object-contain opacity-95"
+              />
+            )}
             <p className="text-gray-800">{blog.content}</p>
           </CardContent>
 
@@ -99,7 +107,13 @@ function BlogPost() {
             </div>
 
             <p>
-              {new Date(blog.timeStamp).toLocaleString()}
+              {new Date(blog.timeStamp).toLocaleString([], {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </p>
           </CardFooter>
         </Card>

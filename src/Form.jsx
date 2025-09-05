@@ -10,10 +10,12 @@ import { Github } from "lucide-react";
 export function CreateForm({ onClose }) {
     const [author, setAuthor] = useState("");
     const [title, setTitle] = useState('');
+    const [submittedTitle, setSubmittedTitle] = useState('');
     const [content, setContent] = useState('');
-    const [image, setImage] = useState("/no-image.png");
-    const navigate = useNavigate();
+    const [imageUrl, setImageUrl] = useState("");
+    const [imageError, setImageError] = useState(false);
 
+    const navigate = useNavigate();
     const [blogs, setBlogs] = useState([]);
 
     // Load existing blogs from localStorage when component mounts
@@ -25,6 +27,21 @@ export function CreateForm({ onClose }) {
     const changeAuthor = (e) => setAuthor(e.target.value);
     const handleTitleChange = (e) => setTitle(e.target.value);
     const handleContentChange = (e) => setContent(e.target.value);
+    
+    // So AI-image does not generate on title change
+    const handleTitleBlur = () => {
+        const trimmed = title.trim();
+        if (trimmed) {
+            const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(trimmed)}`;
+            setSubmittedTitle(trimmed);
+            setImageUrl(url);
+            setImageError(false);
+            } else {
+            setSubmittedTitle(""); // Clears image if you change 
+            setImageUrl("");  
+            }
+    };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,7 +52,7 @@ export function CreateForm({ onClose }) {
             author,
             title,
             content,
-            image,
+            image: imageUrl,
             timeStamp: new Date().toISOString()
         }
 
@@ -55,12 +72,14 @@ export function CreateForm({ onClose }) {
         setAuthor("");
         setTitle("");
         setContent("");
-        setImage("");
+        setImageUrl("");
+        setSubmittedTitle("");
+        setImageError(false);
     };
 
     return (
-        <div className="bg-gray-100 p-6 border-b">
-            <form onSubmit={handleSubmit}>
+        <div className="bg-gray-100 p-6 border-b flex">
+            <form onSubmit={handleSubmit}  className={`transition-all duration-300 ${submittedTitle ? "w-2/3" : "w-full"}`}>
                 <div className="flex justify-between items-center mb-4">
                     <label className="block font-medium text-lg">Create a new blog post</label>
                 </div>
@@ -72,7 +91,9 @@ export function CreateForm({ onClose }) {
                         placeholder="Title"
                         className="mb-2"
                         value={title}
-                        onChange={handleTitleChange} />
+                        onChange={handleTitleChange} 
+                        onBlur={handleTitleBlur}
+                    />
                 </label>
 
                 {/* Author selection with Avatar */}
@@ -122,6 +143,20 @@ export function CreateForm({ onClose }) {
                     )}
                 </div>
             </form>
+
+            {submittedTitle && (
+                <div className="w-1/3 flex justify-center items-center">
+                    <div style={{ maxWidth: "50%" }}>
+                        <img
+                            src={imageError ? "/no-image.png" : imageUrl}
+                            alt={submittedTitle}
+                            onError={() => setImageError(true)}
+                            className="rounded-lg shadow-md opacity-95"
+                        />
+                    </div>
+                </div>
+                )
+            }
         </div>
     )
 }
