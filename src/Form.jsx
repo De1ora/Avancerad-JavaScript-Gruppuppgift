@@ -14,6 +14,7 @@ export function CreateForm({ onClose }) {
     const [content, setContent] = useState('');
     const [imageUrl, setImageUrl] = useState("");
     const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(false);
 
     const navigate = useNavigate();
     const [blogs, setBlogs] = useState([]);
@@ -31,15 +32,19 @@ export function CreateForm({ onClose }) {
     // So AI-image does not generate on title change
     const handleTitleBlur = () => {
         const trimmed = title.trim();
-        if (trimmed) {
+
+        if (trimmed && trimmed !== submittedTitle) {
             const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(trimmed)}`;
             setSubmittedTitle(trimmed);
             setImageUrl(url);
             setImageError(false);
-            } else {
-            setSubmittedTitle(""); // Clears image if you change 
-            setImageUrl("");  
-            }
+            setImageLoading(true); // Generating image..."
+        } else if (!trimmed) {
+            setSubmittedTitle("");
+            setImageUrl("");
+            setImageError(false);
+            setImageLoading(false);
+        }
     };
 
 
@@ -145,14 +150,24 @@ export function CreateForm({ onClose }) {
             </form>
 
             {submittedTitle && (
-                <div className="w-1/3 flex justify-center items-center">
+                <div className="w-1/3 flex flex-col justify-center items-center">
                     <div style={{ maxWidth: "50%" }}>
-                        <img
-                            src={imageError ? "/no-image.png" : imageUrl}
-                            alt={submittedTitle}
-                            onError={() => setImageError(true)}
-                            className="rounded-lg shadow-md opacity-95"
-                        />
+                        {!imageError && (
+                            <img
+                                src={imageUrl}
+                                alt={submittedTitle}
+                                onLoad={() => setImageLoading(false)}
+                                onError={() => {
+                                    setImageError(true);
+                                    setImageLoading(false);
+                                }}
+                                className="rounded-lg shadow-md opacity-95"
+                            />
+                        )}
+
+                        {imageLoading && (
+                            <p className="mt-2 text-sm text-gray-500 text-center">Generating image…</p>
+                        )}
                     </div>
                 </div>
                 )

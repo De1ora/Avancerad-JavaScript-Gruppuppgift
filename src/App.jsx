@@ -5,6 +5,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Github } from "lucide-react";
 import { CreateForm } from "./Form.jsx";
 import { useState, useEffect } from "react";
+import BlogPost from "./components/BlogPost";
+import PostView from "./pages/PostView";
 
 function Home() {
   return (
@@ -12,7 +14,7 @@ function Home() {
       <CardContent>
         <h1 className="text-xl font-bold">Simpleblog/Superviktiga bloggen</h1>
         <p className="text-gray-600">Welcome to the blog!</p>
-        <BlogPost />
+        <BlogPost latestPerAuthor backTo="/" />
       </CardContent>
     </Card>
   );
@@ -23,7 +25,8 @@ function Athir() {
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Athir blogpost</h1>
-        <p className="text-gray-600">Athir test</p>
+        {/*<p className="text-gray-600">Athir test</p>*/}
+        <BlogPost authorFilter="AthirK" backTo="/AthirK" />
       </CardContent>
     </Card>
   );
@@ -34,7 +37,8 @@ function Johanna() {
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Johanna blogpost</h1>
-        <p className="text-gray-600">Johanna test</p>
+        {/*<p className="text-gray-600">Johanna test</p>*/}
+        <BlogPost authorFilter="JoLundan" backTo="/JoLundan" />
       </CardContent>
     </Card>
   );
@@ -45,7 +49,8 @@ function Lisa() {
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Lisa blogpost</h1>
-        <p className="text-gray-600">Lisa test</p>
+        {/*<p className="text-gray-600">Lisa test</p>*/}
+        <BlogPost authorFilter="De1ora" backTo="/De1ora" />
       </CardContent>
     </Card>
   );
@@ -56,13 +61,14 @@ function Magnus() {
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Magnus blogpost</h1>
-        <p className="text-gray-600">Magnus test</p>
+         {/*<p className="text-gray-600">Magnus test</p>*/}
+        <BlogPost authorFilter="rydalund" backTo="/rydalund" />
       </CardContent>
     </Card>
   );
 }
 
-function BlogPost() {
+{/*function BlogPost() {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
@@ -79,7 +85,7 @@ function BlogPost() {
             <CardTitle>{blog.title}</CardTitle>
           </CardHeader>
           
-          {/* Test with p to the right */}
+          Test with p to the right -----
           <CardContent className="flex items-start gap-x-4">
              {blog.image && (
               <img
@@ -120,7 +126,7 @@ function BlogPost() {
       ))}
     </div>
   )
-}
+}*/}
 
 export default function App() {
 
@@ -165,6 +171,7 @@ export default function App() {
         <Route path="/JoLundan" element={<Johanna />} />
         <Route path="/De1ora" element={<Lisa />} />
         <Route path="/rydalund" element={<Magnus />} />
+        <Route path="/post/:id" element={<PostView />} /> {/*Route for specific blog post */}
       </Routes>
     </Router>
   );
