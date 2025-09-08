@@ -29,9 +29,29 @@ export function CreateForm({ onClose, addBlog }) {
         if (stored) setBlogs(JSON.parse(stored));
     }, [])*/
 
-    const changeAuthor = (e) => setAuthor(e.target.value);
-    const handleTitleChange = (e) => setTitle(e.target.value);
-    const handleContentChange = (e) => setContent(e.target.value);
+    const changeAuthor = (e) => {
+        const value = e.target.value;
+        setAuthor(value);
+        if (authorError && value.trim()) {
+            setAuthorError(false);
+        }
+    };
+
+    const handleTitleChange = (e) => {
+        const value = e.target.value;
+        setTitle(value);
+        if (titleError && value.trim()) {
+            setTitleError(false);
+        }
+    };
+
+    const handleContentChange = (e) => {
+        const value = e.target.value;
+        setContent(value);
+        if (contentError && value.trim()) {
+            setContentError(false);
+        }
+    };
     
     // So AI-image does not generate on title change
     const handleTitleBlur = () => {
@@ -116,7 +136,7 @@ export function CreateForm({ onClose, addBlog }) {
                         onBlur={handleTitleBlur}
                     />
                     {titleError && (
-                        <p className="text-red-600 text-sm mt-1">Please enter a title.</p>
+                        <p className="text-red-600 text-sm mt-1">Please enter a title!</p>
                     )}
                 </label>
 
@@ -156,7 +176,7 @@ export function CreateForm({ onClose, addBlog }) {
                     Content:
                     <Textarea value={content} onChange={handleContentChange} />
                     {contentError && (
-                        <p className="text-red-600 text-sm mt-1">Please enter some content.</p>
+                        <p className="text-red-600 text-sm mt-1">Please share some content...</p>
                     )}
                 </label>
 
