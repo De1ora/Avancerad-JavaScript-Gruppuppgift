@@ -183,7 +183,7 @@ export default function App() {
         <Route path="/JoLundan" element={<Johanna blogs={blogs} />} />
         <Route path="/De1ora" element={<Lisa blogs={blogs} />} />
         <Route path="/rydalund" element={<Magnus blogs={blogs} />} />
-        <Route path="/post/:id" element={<PostView blogs={blogs} />} /> {/*Route for specific blog post */}
+        <Route path="/post/:id" element={<PostView />} /> {/*Route for specific blog post */}
       </Routes>
     </Router>
   );

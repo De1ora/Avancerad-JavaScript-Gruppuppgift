@@ -32,11 +32,14 @@ export default function PostView() {
   }, [id]);
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <Link to={backTo} className="text-blue-500 hover:underline text-sm mb-4 block">
-        ← Go back
-      </Link>
+  <div className="p-6 max-w-2xl mx-auto">
+    <Link to={backTo} className="text-blue-500 hover:underline text-sm mb-4 block">
+      ← Go back
+    </Link>
 
+    {!post ? (
+      <p>Post not found</p>
+    ) : (
       <Card>
         <CardHeader>
           <CardTitle>{post.title}</CardTitle>
@@ -57,15 +60,15 @@ export default function PostView() {
         </CardContent>
 
         <CardFooter className="flex justify-between text-xs text-gray-600">
-           <Link to={`/${post.author}`} className="flex items-center gap-2 cursor-pointer hover:underline">
-              <Avatar className="w-6 h-6">
-                <AvatarImage src={`https://github.com/${post.author}.png`} alt={post.author} />
-                <AvatarFallback>
-                  <Github className="w-4 h-4" />
-                </AvatarFallback>
-              </Avatar>
-              <p>{post.author}</p>
-            </Link>
+          <Link to={`/${post.author}`} className="flex items-center gap-2 cursor-pointer hover:underline">
+            <Avatar className="w-6 h-6">
+              <AvatarImage src={`https://github.com/${post.author}.png`} alt={post.author} />
+              <AvatarFallback>
+                <Github className="w-4 h-4" />
+              </AvatarFallback>
+            </Avatar>
+            <p>{post.author}</p>
+          </Link>
           <p>
             {new Date(post.timeStamp).toLocaleString([], {
               year: "numeric",
@@ -77,6 +80,7 @@ export default function PostView() {
           </p>
         </CardFooter>
       </Card>
-    </div>
-  );
+    )}
+  </div>
+);
 }

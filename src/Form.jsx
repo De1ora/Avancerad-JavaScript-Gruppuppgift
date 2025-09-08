@@ -16,6 +16,9 @@ export function CreateForm({ onClose, addBlog }) {
     const [imageUrl, setImageUrl] = useState("");
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
+    const [authorError, setAuthorError] = useState(false);
+    const [titleError, setTitleError] = useState(false);
+    const [contentError, setContentError] = useState(false);
 
     const navigate = useNavigate();
     /*const [blogs, setBlogs] = useState([]);
@@ -51,12 +54,24 @@ export function CreateForm({ onClose, addBlog }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const trimmedAuthor = author.trim();
+        const trimmedTitle = title.trim();
+        const trimmedContent = content.trim();
+
+        const hasError = !trimmedAuthor || !trimmedTitle || !trimmedContent;
+
+        setAuthorError(!trimmedAuthor);
+        setTitleError(!trimmedTitle);
+        setContentError(!trimmedContent);
+
+        if (hasError) return;
+    
         // Create a new blog post object
         const newBlog = {
             id: uuidv4(),
-            author,
-            title,
-            content,
+            author: trimmedAuthor,
+            title: trimmedTitle,
+            content: trimmedContent,
             image: imageUrl,
             timeStamp: new Date().toISOString()
         }
@@ -100,6 +115,9 @@ export function CreateForm({ onClose, addBlog }) {
                         onChange={handleTitleChange} 
                         onBlur={handleTitleBlur}
                     />
+                    {titleError && (
+                        <p className="text-red-600 text-sm mt-1">Please enter a title.</p>
+                    )}
                 </label>
 
                 {/* Author selection with Avatar */}
@@ -129,11 +147,17 @@ export function CreateForm({ onClose, addBlog }) {
                             <option value="rydalund">Magnus</option>
                         </select>
                     </div>
+                    {authorError && (
+                        <p className="text-red-600 text-sm mt-1">Please select an author!</p>
+                    )}
                 </label>
 
                 <label className="block mx-6 mb-2 font-medium">
                     Content:
                     <Textarea value={content} onChange={handleContentChange} />
+                    {contentError && (
+                        <p className="text-red-600 text-sm mt-1">Please enter some content.</p>
+                    )}
                 </label>
 
                 <div className="flex gap-2">
