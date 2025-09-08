@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "./components/ui/input";
 import { Textarea } from "./components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -6,8 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Github } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
-export function CreateForm({ onClose }) {
+export function CreateForm({ onClose, addBlog }) {
     const [author, setAuthor] = useState("");
     const [title, setTitle] = useState('');
     const [submittedTitle, setSubmittedTitle] = useState('');
@@ -17,13 +18,13 @@ export function CreateForm({ onClose }) {
     const [imageLoading, setImageLoading] = useState(false);
 
     const navigate = useNavigate();
-    const [blogs, setBlogs] = useState([]);
+    /*const [blogs, setBlogs] = useState([]);
 
-    // Load existing blogs from localStorage when component mounts
+    Load existing blogs from localStorage when component mounts
     useEffect(() => {
         const stored = localStorage.getItem("blogs");
         if (stored) setBlogs(JSON.parse(stored));
-    }, [])
+    }, [])*/
 
     const changeAuthor = (e) => setAuthor(e.target.value);
     const handleTitleChange = (e) => setTitle(e.target.value);
@@ -47,7 +48,6 @@ export function CreateForm({ onClose }) {
         }
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -62,16 +62,17 @@ export function CreateForm({ onClose }) {
         }
 
         console.log("Form submitted");
+        addBlog(newBlog); //Prop från App
 
         if (onClose) {onClose();}
 
         // Navigate to a new route based on the author
         navigate(`/${newBlog.author}`);
 
-        // Update blogs state and save to localStorage
+        /*Update blogs state and save to localStorage
         const updateBlogs = [...blogs, newBlog];
         setBlogs(updateBlogs);
-        localStorage.setItem("blogs", JSON.stringify(updateBlogs));
+        localStorage.setItem("blogs", JSON.stringify(updateBlogs));*/
 
         // Clear form inputs after submission
         setAuthor("");
@@ -151,18 +152,31 @@ export function CreateForm({ onClose }) {
 
             {submittedTitle && (
                 <div className="w-1/3 flex flex-col justify-center items-center">
-                    <div style={{ maxWidth: "50%" }}>
-                        {!imageError && (
+                    <div style={{ maxWidth: "50%" }} className="relative"> {/*Relative for positioning of button*/}
+                       {!imageError && (
                             <img
-                                src={imageUrl}
-                                alt={submittedTitle}
-                                onLoad={() => setImageLoading(false)}
-                                onError={() => {
-                                    setImageError(true);
-                                    setImageLoading(false);
-                                }}
-                                className="rounded-lg shadow-md opacity-95"
+                            src={imageUrl}
+                            alt={submittedTitle}
+                            onLoad={() => setImageLoading(false)}
+                            onError={() => {
+                                setImageError(true);
+                                setImageLoading(false);
+                            }}
+                            className="rounded-lg shadow-md opacity-95"
                             />
+                        )}
+
+                        {!imageError && !imageLoading && ( //Show button when image is loaded
+                            <button
+                            onClick={() => {
+                                setImageUrl("");
+                                setSubmittedTitle("");
+                            }}
+                            className="absolute top-2 right-2 bg-white shadow-md border border-gray-300 rounded-full p-1 text-gray-700 hover:bg-red-600 hover:border-black text-black transition-colors"
+                            title="Remove image"
+                            >
+                            <Trash2 className="w-5 h-5" />
+                            </button>
                         )}
 
                         {imageLoading && (
@@ -170,8 +184,7 @@ export function CreateForm({ onClose }) {
                         )}
                     </div>
                 </div>
-                )
-            }
+            )}
         </div>
     )
 }

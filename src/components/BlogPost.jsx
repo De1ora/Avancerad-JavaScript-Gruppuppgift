@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Github } from "lucide-react";
@@ -20,7 +20,7 @@ function BlogImage({ src, alt }) {
 }
 
 function getLatestPostsPerAuthor(blogs) {
-  return Object.values(
+  const latest = Object.values(
     blogs.reduce((acc, blog) => {
       if (!acc[blog.author] || new Date(blog.timeStamp) > new Date(acc[blog.author].timeStamp)) {
         acc[blog.author] = blog;
@@ -28,41 +28,40 @@ function getLatestPostsPerAuthor(blogs) {
       return acc;
     }, {})
   );
+
+  return latest.sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp));
 }
 
 
-export default function BlogPost({ authorFilter = null, backTo = "/", latestPerAuthor = false }) {
-  const [allBlogs, setAllBlogs] = useState([]);
-  const [blogs, setBlogs] = useState([]);
+export default function BlogPost({ blogs = [], authorFilter = null, backTo = "/", latestPerAuthor = false }) {
+  //const [allBlogs, setAllBlogs] = useState([]);
+  //const [blogs, setBlogs] = useState([]);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("blogs");
-    if (stored) setAllBlogs(JSON.parse(stored));
-  }, []);
+  //useEffect(() => {
+    //const stored = localStorage.getItem("blogs");
+    //if (stored) setAllBlogs(JSON.parse(stored));
+  //}, []);
 
-  useEffect(() => {
-    let filteredBlogs = allBlogs;
+  //useEffect(() => {
+  let filteredBlogs = blogs;
 
-    if (latestPerAuthor) {
-      filteredBlogs = getLatestPostsPerAuthor(allBlogs);
-    } else if (authorFilter) {
-      filteredBlogs = allBlogs.filter((b) => b.author === authorFilter);
-    }
-
-    setBlogs(filteredBlogs);
-  }, [allBlogs, authorFilter, latestPerAuthor]);
-
-  if (blogs.length === 0) {
-    return (
-      <div className="p-6 text-center text-gray-500">
-        <p>Looks like there are no posts to show.</p>
-      </div>
-    );
+  if (latestPerAuthor) {
+    filteredBlogs = getLatestPostsPerAuthor(blogs);
+  } else if (authorFilter) {
+    filteredBlogs = blogs.filter((b) => b.author === authorFilter);
   }
+
+  filteredBlogs.sort(
+    (a, b) => new Date(b.timeStamp) - new Date(a.timeStamp)
+  );
+
+
+    //setBlogs(filteredBlogs);
+  //}, [allBlogs, authorFilter, latestPerAuthor]);
 
   return (
     <div className="p-6 space-y-4">
-      {blogs.map((blog) => (
+      {filteredBlogs.map((blog) => (
         <Link
           key={blog.id}
           to={`/post/${blog.id}?backTo=${encodeURIComponent(backTo)}`}
@@ -77,15 +76,15 @@ export default function BlogPost({ authorFilter = null, backTo = "/", latestPerA
               <p className="text-gray-800">{blog.content}</p>
             </CardContent>
             <CardFooter className="flex justify-between text-xs">
-              <div className="flex item-center gap-2">
+              <Link to={`/${blog.author}`} className="flex items-center gap-2 cursor-pointer hover:underline">
                 <Avatar className="w-6 h-6">
-                  <AvatarImage src={`https://github.com/${blog.author}.png`} alt={blog.author} />
+                <AvatarImage src={`https://github.com/${blog.author}.png`} alt={blog.author} />
                   <AvatarFallback>
                     <Github className="w-4 h-4" />
                   </AvatarFallback>
                 </Avatar>
                 <p>{blog.author}</p>
-              </div>
+              </Link>
               <p>
                 {new Date(blog.timeStamp).toLocaleString([], {
                   year: "numeric",

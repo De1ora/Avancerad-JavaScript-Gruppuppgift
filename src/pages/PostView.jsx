@@ -31,12 +31,10 @@ export default function PostView() {
     }
   }, [id]);
 
-  if (!post) return <p className="p-6 text-center text-gray-500">Inlägg hittades inte.</p>;
-
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <Link to={backTo} className="text-blue-500 hover:underline text-sm mb-4 block">
-        ← Tillbaka
+        ← Go back
       </Link>
 
       <Card>
@@ -55,23 +53,19 @@ export default function PostView() {
               />
             </div>
           )}
-
           <p className="text-gray-800">{post.content}</p>
         </CardContent>
 
         <CardFooter className="flex justify-between text-xs text-gray-600">
-          <div className="flex items-center gap-2">
-            <Avatar className="w-6 h-6">
-              <AvatarImage
-                src={`https://github.com/${post.author}.png`}
-                alt={post.author}
-              />
-              <AvatarFallback>
-                <Github className="w-4 h-4" />
-              </AvatarFallback>
-            </Avatar>
-            <p>{post.author}</p>
-          </div>
+           <Link to={`/${post.author}`} className="flex items-center gap-2 cursor-pointer hover:underline">
+              <Avatar className="w-6 h-6">
+                <AvatarImage src={`https://github.com/${post.author}.png`} alt={post.author} />
+                <AvatarFallback>
+                  <Github className="w-4 h-4" />
+                </AvatarFallback>
+              </Avatar>
+              <p>{post.author}</p>
+            </Link>
           <p>
             {new Date(post.timeStamp).toLocaleString([], {
               year: "numeric",

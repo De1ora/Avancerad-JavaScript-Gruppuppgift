@@ -8,61 +8,61 @@ import { useState, useEffect } from "react";
 import BlogPost from "./components/BlogPost";
 import PostView from "./pages/PostView";
 
-function Home() {
+function Home({ blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Simpleblog/Superviktiga bloggen</h1>
         <p className="text-gray-600">Welcome to the blog!</p>
-        <BlogPost latestPerAuthor backTo="/" />
+        <BlogPost blogs={blogs} latestPerAuthor backTo="/" />
       </CardContent>
     </Card>
   );
 }
 
-function Athir() {
+function Athir({ blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Athir blogpost</h1>
         {/*<p className="text-gray-600">Athir test</p>*/}
-        <BlogPost authorFilter="AthirK" backTo="/AthirK" />
+        <BlogPost blogs={blogs} authorFilter="AthirK" backTo="/AthirK" />
       </CardContent>
     </Card>
   );
 }
 
-function Johanna() {
+function Johanna({ blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Johanna blogpost</h1>
         {/*<p className="text-gray-600">Johanna test</p>*/}
-        <BlogPost authorFilter="JoLundan" backTo="/JoLundan" />
+        <BlogPost blogs={blogs} authorFilter="JoLundan" backTo="/JoLundan" />
       </CardContent>
     </Card>
   );
 }
 
-function Lisa() {
+function Lisa({ blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Lisa blogpost</h1>
         {/*<p className="text-gray-600">Lisa test</p>*/}
-        <BlogPost authorFilter="De1ora" backTo="/De1ora" />
+        <BlogPost blogs={blogs} authorFilter="De1ora" backTo="/De1ora" />
       </CardContent>
     </Card>
   );
 }
 
-function Magnus() {
+function Magnus({ blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Magnus blogpost</h1>
          {/*<p className="text-gray-600">Magnus test</p>*/}
-        <BlogPost authorFilter="rydalund" backTo="/rydalund" />
+        <BlogPost blogs={blogs} authorFilter="rydalund" backTo="/rydalund" />
       </CardContent>
     </Card>
   );
@@ -131,10 +131,22 @@ function Magnus() {
 export default function App() {
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [blogs, setBlogs] = useState([]); {/* For lifting up blogPost state */}
 
   const toggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
   }
+
+  useEffect(() => {
+    const stored = localStorage.getItem("blogs");
+    if (stored) setBlogs(JSON.parse(stored));
+  }, []);
+  
+  const addBlog = (newBlog) => {
+    const updated = [...blogs, newBlog];
+    setBlogs(updated);
+    localStorage.setItem("blogs", JSON.stringify(updated));
+  };
 
   return (
     <Router>
@@ -163,15 +175,15 @@ export default function App() {
         </div>
       </nav>
 
-      {showCreateForm && <CreateForm onClose={() => setShowCreateForm(false)} />}
+      {showCreateForm && <CreateForm onClose={() => setShowCreateForm(false)}  addBlog={addBlog}/>}
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/AthirK" element={<Athir />} />
-        <Route path="/JoLundan" element={<Johanna />} />
-        <Route path="/De1ora" element={<Lisa />} />
-        <Route path="/rydalund" element={<Magnus />} />
-        <Route path="/post/:id" element={<PostView />} /> {/*Route for specific blog post */}
+        <Route path="/" element={<Home blogs={blogs} />} />
+        <Route path="/AthirK" element={<Athir blogs={blogs} />} />
+        <Route path="/JoLundan" element={<Johanna blogs={blogs} />} />
+        <Route path="/De1ora" element={<Lisa blogs={blogs} />} />
+        <Route path="/rydalund" element={<Magnus blogs={blogs} />} />
+        <Route path="/post/:id" element={<PostView blogs={blogs} />} /> {/*Route for specific blog post */}
       </Routes>
     </Router>
   );
