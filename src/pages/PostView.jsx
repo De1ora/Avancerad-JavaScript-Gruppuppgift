@@ -56,7 +56,11 @@ export default function PostView() {
               />
             </div>
           )}
-          <p className="text-gray-800">{post.content}</p>
+          <div className="prose prose-lg whitespace-pre-line text-gray-800 max-w-none space-y-6">
+            {post.content.split("\n\n").map((foo, i) => (
+              <p key={i}>{foo}</p>
+            ))}
+          </div>
         </CardContent>
 
         <CardFooter className="flex justify-between text-xs text-gray-600">

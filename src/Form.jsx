@@ -21,13 +21,6 @@ export function CreateForm({ onClose, addBlog }) {
     const [contentError, setContentError] = useState(false);
 
     const navigate = useNavigate();
-    /*const [blogs, setBlogs] = useState([]);
-
-    Load existing blogs from localStorage when component mounts
-    useEffect(() => {
-        const stored = localStorage.getItem("blogs");
-        if (stored) setBlogs(JSON.parse(stored));
-    }, [])*/
 
     const changeAuthor = (e) => {
         const value = e.target.value;
@@ -97,17 +90,12 @@ export function CreateForm({ onClose, addBlog }) {
         }
 
         console.log("Form submitted");
-        addBlog(newBlog); //Prop från App
+        addBlog(newBlog); //Prop from App
 
         if (onClose) {onClose();}
 
         // Navigate to a new route based on the author
         navigate(`/${newBlog.author}`);
-
-        /*Update blogs state and save to localStorage
-        const updateBlogs = [...blogs, newBlog];
-        setBlogs(updateBlogs);
-        localStorage.setItem("blogs", JSON.stringify(updateBlogs));*/
 
         // Clear form inputs after submission
         setAuthor("");

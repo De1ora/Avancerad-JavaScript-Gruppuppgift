@@ -33,17 +33,8 @@ function getLatestPostsPerAuthor(blogs) {
   return latest.sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp));
 }
 
-
-export default function BlogPost({ blogs = [], authorFilter = null, backTo = "/", latestPerAuthor = false }) {
-  //const [allBlogs, setAllBlogs] = useState([]);
-  //const [blogs, setBlogs] = useState([]);
-
-  //useEffect(() => {
-    //const stored = localStorage.getItem("blogs");
-    //if (stored) setAllBlogs(JSON.parse(stored));
-  //}, []);
-
-  //useEffect(() => {
+//truncateContent to show introduction text, set false in PostView to show all
+export default function BlogPost({ blogs = [], authorFilter = null, backTo = "/", latestPerAuthor = false,  truncateContent = true}) {
   let filteredBlogs = blogs;
 
   if (latestPerAuthor) {
@@ -57,15 +48,19 @@ export default function BlogPost({ blogs = [], authorFilter = null, backTo = "/"
   );
 
 
-    //setBlogs(filteredBlogs);
-  //}, [allBlogs, authorFilter, latestPerAuthor]);
-
   return (
     <div className="p-6 space-y-4">
       {filteredBlogs.map((blog) => (
         <Card key={blog.id} className="w-full hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle>{blog.title}</CardTitle>
+            <CardTitle>
+              <Link
+                to={`/post/${blog.id}?backTo=${encodeURIComponent(backTo)}`}
+                className="hover:underline"
+              >
+                {blog.title}
+              </Link>
+            </CardTitle>
           </CardHeader>
 
           <CardContent className="flex items-start gap-x-4">
@@ -74,7 +69,7 @@ export default function BlogPost({ blogs = [], authorFilter = null, backTo = "/"
               className="flex gap-4"
             >
               {blog.image && <BlogImage src={blog.image} alt={blog.title}  className="transition duration-200 transform hover:scale-105 hover:shadow-lg rounded"/>}
-              <p className="text-gray-800">{blog.content}</p>
+              <div className={`text-gray-800 ${truncateContent ? "line-clamp-2" : ""}`}>{blog.content}</div>
             </Link>
           </CardContent>
 
