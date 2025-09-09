@@ -5,13 +5,15 @@ import { CreateForm } from "./Form.jsx";
 import { useState, useEffect } from "react";
 import BlogPost from "./components/BlogPost";
 import PostView from "./pages/PostView";
+import { useUserStore } from "@/stores/userStore";
 
-const users = [
+/*const users = [
   { id: "AthirK", displayName: "Athir" },
   { id: "JoLundan", displayName: "Johanna" },
   { id: "De1ora", displayName: "Lisa" },
   { id: "rydalund", displayName: "Magnus" },
-];
+  { id: "EnanderW", displayName: "William" },
+];*/
 
 function UserBlog({ user, displayName, blogs }) {
   return (
@@ -39,9 +41,7 @@ function Home({ blogs }) {
 export default function App() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [blogs, setBlogs] = useState([]);
-  {
-    /* For lifting up blogPost state */
-  }
+  const users = useUserStore((state) => state.users);
 
   const toggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);

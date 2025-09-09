@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Github } from "lucide-react";
 import { Trash2 } from "lucide-react";
+import { useUserStore } from "@/stores/userStore";
 
 export function CreateForm({ onClose, addBlog }) {
     const [author, setAuthor] = useState("");
@@ -19,6 +20,7 @@ export function CreateForm({ onClose, addBlog }) {
     const [authorError, setAuthorError] = useState(false);
     const [titleError, setTitleError] = useState(false);
     const [contentError, setContentError] = useState(false);
+    const users = useUserStore((state) => state.users); //Access global state
 
     const navigate = useNavigate();
 
@@ -45,7 +47,7 @@ export function CreateForm({ onClose, addBlog }) {
             setContentError(false);
         }
     };
-    
+
     // So AI-image does not generate on title change
     const handleTitleBlur = () => {
         const trimmed = title.trim();
@@ -78,7 +80,7 @@ export function CreateForm({ onClose, addBlog }) {
         setContentError(!trimmedContent);
 
         if (hasError) return;
-    
+
         // Create a new blog post object
         const newBlog = {
             id: uuidv4(),
@@ -92,7 +94,7 @@ export function CreateForm({ onClose, addBlog }) {
         console.log("Form submitted");
         addBlog(newBlog); //Prop from App
 
-        if (onClose) {onClose();}
+        if (onClose) { onClose(); }
 
         // Navigate to a new route based on the author
         navigate(`/${newBlog.author}`);
@@ -108,7 +110,7 @@ export function CreateForm({ onClose, addBlog }) {
 
     return (
         <div className="bg-gray-100 p-6 border-b flex">
-            <form onSubmit={handleSubmit}  className={`transition-all duration-300 ${submittedTitle ? "w-2/3" : "w-full"}`}>
+            <form onSubmit={handleSubmit} className={`transition-all duration-300 ${submittedTitle ? "w-2/3" : "w-full"}`}>
                 <div className="flex justify-between items-center mb-4">
                     <label className="block font-medium text-lg">Create a new blog post</label>
                 </div>
@@ -120,7 +122,7 @@ export function CreateForm({ onClose, addBlog }) {
                         placeholder="Title"
                         className="mb-2"
                         value={title}
-                        onChange={handleTitleChange} 
+                        onChange={handleTitleChange}
                         onBlur={handleTitleBlur}
                     />
                     {titleError && (
@@ -149,10 +151,11 @@ export function CreateForm({ onClose, addBlog }) {
                             onChange={changeAuthor}
                         >
                             <option disabled value="">Please choose:</option>
-                            <option value="AthirK">Athir</option>
-                            <option value="JoLundan">Johanna</option>
-                            <option value="De1ora">Lisa</option>
-                            <option value="rydalund">Magnus</option>
+                            {users.map((user) => (
+                                <option key={user.id} value={user.id}>
+                                    {user.displayName}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     {authorError && (
@@ -185,29 +188,29 @@ export function CreateForm({ onClose, addBlog }) {
             {submittedTitle && (
                 <div className="w-1/3 flex flex-col justify-center items-center">
                     <div style={{ maxWidth: "50%" }} className="relative"> {/*Relative for positioning of button*/}
-                       {!imageError && (
+                        {!imageError && (
                             <img
-                            src={imageUrl}
-                            alt={submittedTitle}
-                            onLoad={() => setImageLoading(false)}
-                            onError={() => {
-                                setImageError(true);
-                                setImageLoading(false);
-                            }}
-                            className="rounded-lg shadow-md opacity-95"
+                                src={imageUrl}
+                                alt={submittedTitle}
+                                onLoad={() => setImageLoading(false)}
+                                onError={() => {
+                                    setImageError(true);
+                                    setImageLoading(false);
+                                }}
+                                className="rounded-lg shadow-md opacity-95"
                             />
                         )}
 
                         {!imageError && !imageLoading && ( //Show button when image is loaded
                             <button
-                            onClick={() => {
-                                setImageUrl("");
-                                setSubmittedTitle("");
-                            }}
-                            className="absolute top-2 right-2 bg-white shadow-md border border-gray-300 rounded-full p-1 text-gray-700 hover:bg-red-600 hover:border-black text-black transition-colors"
-                            title="Remove image"
+                                onClick={() => {
+                                    setImageUrl("");
+                                    setSubmittedTitle("");
+                                }}
+                                className="absolute top-2 right-2 bg-white shadow-md border border-gray-300 rounded-full p-1 text-gray-700 hover:bg-red-600 hover:border-black text-black transition-colors"
+                                title="Remove image"
                             >
-                            <Trash2 className="w-5 h-5" />
+                                <Trash2 className="w-5 h-5" />
                             </button>
                         )}
 
