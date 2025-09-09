@@ -1,156 +1,123 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button"; // shadcn/ui button
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Github } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { CreateForm } from "./Form.jsx";
 import { useState, useEffect } from "react";
+import BlogPost from "./components/BlogPost";
+import PostView from "./pages/PostView";
 
-function Home() {
+const users = [
+  { id: "AthirK", displayName: "Athir" },
+  { id: "JoLundan", displayName: "Johanna" },
+  { id: "De1ora", displayName: "Lisa" },
+  { id: "rydalund", displayName: "Magnus" },
+];
+
+function UserBlog({ user, displayName, blogs }) {
   return (
     <Card className="my-6 mx-45">
       <CardContent>
-        <h1 className="text-xl font-bold">Simpleblog/Superviktiga bloggen</h1>
+        <h1 className="text-x1 font-bold">{displayName} blogpost</h1>
+        <BlogPost blogs={blogs} authorFilter={user} backTo={`/${user}`} />
+      </CardContent>
+    </Card>
+  );
+}
+
+function Home({ blogs }) {
+  return (
+    <Card className="my-6 mx-45">
+      <CardContent>
+        <h1 className="text-xl font-bold">Super Important Blog</h1>
         <p className="text-gray-600">Welcome to the blog!</p>
-        <BlogPost />
+        <BlogPost blogs={blogs} latestPerAuthor backTo="/" />
       </CardContent>
     </Card>
   );
-}
-
-function Athir() {
-  return (
-    <Card className="my-6 mx-45">
-      <CardContent>
-        <h1 className="text-xl font-bold">Athir blogpost</h1>
-        <p className="text-gray-600">Athir test</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function Johanna() {
-  return (
-    <Card className="my-6 mx-45">
-      <CardContent>
-        <h1 className="text-xl font-bold">Johanna blogpost</h1>
-        <p className="text-gray-600">Johanna test</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function Lisa() {
-  return (
-    <Card className="my-6 mx-45">
-      <CardContent>
-        <h1 className="text-xl font-bold">Lisa blogpost</h1>
-        <p className="text-gray-600">Lisa test</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function Magnus() {
-  return (
-    <Card className="my-6 mx-45">
-      <CardContent>
-        <h1 className="text-xl font-bold">Magnus blogpost</h1>
-        <p className="text-gray-600">Magnus test</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function BlogPost() {
-  const [blogs, setBlogs] = useState([]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("blogs")
-    if (stored) setBlogs(JSON.parse(stored));
-  }, []);
-
-  return (
-    <div className="p-6 space-y-4">
-      {blogs.map((blog, index) => (
-        <Card key={index} className="w-full">
-
-          <CardHeader>
-            <CardTitle>{blog.title}</CardTitle>
-            <CardDescription>{blog.image}</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <p className="text-gray-800">{blog.content}</p>
-          </CardContent>
-
-          <CardFooter className="flex justify-between text-xs">
-
-            <div className="flex item-center gap-2">
-              <Avatar className="w-6 h-6">
-                <AvatarImage src={`https://github.com/${blog.author}.png`} alt={blog.author} />
-                <AvatarFallback>
-                  <Github className="w-4 h-4" />
-                </AvatarFallback>
-              </Avatar>
-              <p>
-                {blog.author}
-              </p>
-            </div>
-
-            <p>
-              {new Date(blog.timeStamp).toLocaleString()}
-            </p>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
-  )
 }
 
 export default function App() {
-
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [blogs, setBlogs] = useState([]);
+  {
+    /* For lifting up blogPost state */
+  }
 
   const toggleCreateForm = () => {
     setShowCreateForm(!showCreateForm);
-  }
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem("blogs");
+    if (stored) setBlogs(JSON.parse(stored));
+  }, []);
+
+  const addBlog = (newBlog) => {
+    const updated = [...blogs, newBlog];
+    setBlogs(updated);
+    localStorage.setItem("blogs", JSON.stringify(updated));
+  };
 
   return (
     <Router>
-      <nav className="flex gap-4 p-4 bg-gray-50 border-b justify-between">
+      <nav className="flex gap-4 p-4 bg-blue-500 justify-between">
         <div>
-          <Button asChild variant="link" className="hover:text-blue-600">
+          <Button
+            asChild
+            variant="link"
+            className="text-white hover:text-black-500"
+          >
             <Link to="/">Home</Link>
           </Button>
-          <Button asChild variant="link" className="hover:text-blue-600">
-            <Link to="/AthirK">Athir</Link>
-          </Button>
-          <Button asChild variant="link" className="hover:text-blue-600">
-            <Link to="/JoLundan">Johanna</Link>
-          </Button>
-          <Button asChild variant="link" className="hover:text-blue-600">
-            <Link to="/De1ora">Lisa</Link>
-          </Button>
-          <Button asChild variant="link" className="hover:text-blue-600">
-            <Link to="/rydalund">Magnus</Link>
-          </Button>
+
+          {users.map((user) => (
+            <Button
+              key={user.id}
+              asChild
+              variant="link"
+              className="text-white hover:text-black-500"
+            >
+              <Link to={`/${user.id}`}>{user.displayName}</Link>
+            </Button>
+          ))}
         </div>
+
         <div>
-          <Button variant="outline" onClick={toggleCreateForm} className="border-green-500 text-green-500 hover:bg-green-500 hover:text-white">
+          <Button
+            variant="outline"
+            onClick={toggleCreateForm}
+            className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+          >
             {showCreateForm ? "Close Form" : "Add Post"}
           </Button>
         </div>
       </nav>
 
-      {showCreateForm && <CreateForm onClose={() => setShowCreateForm(false)} />}
+      {showCreateForm && (
+        <CreateForm
+          onClose={() => setShowCreateForm(false)}
+          addBlog={addBlog}
+        />
+      )}
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/AthirK" element={<Athir />} />
-        <Route path="/JoLundan" element={<Johanna />} />
-        <Route path="/De1ora" element={<Lisa />} />
-        <Route path="/rydalund" element={<Magnus />} />
+        <Route path="/" element={<Home blogs={blogs} />} />
+
+        {users.map((user) => (
+          <Route
+            key={user.id}
+            path={`/${user.id}`}
+            element={
+              <UserBlog
+                user={user.id}
+                displayName={user.displayName}
+                blogs={blogs}
+              />
+            }
+          />
+        ))}
+
+        <Route path="/post/:id" element={<PostView />} />
       </Routes>
     </Router>
   );
