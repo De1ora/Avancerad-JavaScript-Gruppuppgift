@@ -24,7 +24,7 @@ export function CreateForm({ onClose, addBlog }) {
 
     const navigate = useNavigate();
 
-    const changeAuthor = (e) => {
+    const handleAuthorChange = (e) => {
         const value = e.target.value;
         setAuthor(value);
         if (authorError && value.trim()) {
@@ -91,7 +91,6 @@ export function CreateForm({ onClose, addBlog }) {
             timeStamp: new Date().toISOString()
         }
 
-        console.log("Form submitted");
         addBlog(newBlog); //Prop from App
 
         if (onClose) { onClose(); }
@@ -148,7 +147,7 @@ export function CreateForm({ onClose, addBlog }) {
                         <select
                             className="border rounded ml-2"
                             value={author}
-                            onChange={changeAuthor}
+                            onChange={handleAuthorChange}
                         >
                             <option disabled value="">Please choose:</option>
                             {users.map((user) => (

@@ -7,14 +7,6 @@ import BlogPost from "./components/BlogPost";
 import PostView from "./pages/PostView";
 import { useUserStore } from "@/stores/userStore";
 
-/*const users = [
-  { id: "AthirK", displayName: "Athir" },
-  { id: "JoLundan", displayName: "Johanna" },
-  { id: "De1ora", displayName: "Lisa" },
-  { id: "rydalund", displayName: "Magnus" },
-  { id: "EnanderW", displayName: "William" },
-];*/
-
 function UserBlog({ user, displayName, blogs }) {
   return (
     <Card className="my-6 mx-45">
@@ -31,7 +23,7 @@ function Home({ blogs }) {
     <Card className="my-6 mx-45">
       <CardContent>
         <h1 className="text-xl font-bold">Super Important Blog</h1>
-        <p className="text-gray-600">Welcome to the blog!</p>
+        <p className="text-gray-600">Most recent posts by our users:</p>
         <BlogPost blogs={blogs} latestPerAuthor backTo="/" />
       </CardContent>
     </Card>
